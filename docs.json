@@ -203,7 +203,6 @@
             "pages": [
               "testing/test-your-agent",
               "testing/agent-runs",
-              "testing/debug-mode",
               "testing/simulated-conversations",
               "testing/common-issues"
             ]
