@@ -1,0 +1,342 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Plivo AI Agents",
+  "description": "Build, deploy, and manage AI voice and messaging agents on Plivo.",
+  "colors": {
+    "primary": "#00B96B",
+    "light": "#55D799",
+    "dark": "#00854D"
+  },
+  "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "fonts": {
+    "heading": { "family": "Inter", "weight": 700 },
+    "body": { "family": "Inter", "weight": 400 }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "what-are-ai-agents",
+              "quickstart",
+              "key-concepts",
+              "platform-overview",
+              "pricing"
+            ]
+          },
+          {
+            "group": "Agents",
+            "pages": [
+              "agents/create-agent",
+              "agents/agent-settings",
+              "agents/agent-types",
+              "agents/voice-configuration",
+              "agents/language-localization",
+              "agents/system-prompts",
+              "agents/versioning"
+            ]
+          },
+          {
+            "group": "Building Agent Flows",
+            "pages": [
+              "flows/overview",
+              "flows/flow-editor",
+              "flows/variables-and-payloads",
+              "flows/conditional-logic",
+              "flows/import-export",
+              "flows/versioning-publishing"
+            ]
+          },
+          {
+            "group": "Nodes Reference",
+            "pages": [
+              "nodes/overview",
+              {
+                "group": "AI",
+                "pages": [
+                  "nodes/ai-action",
+                  "nodes/ai-conversation",
+                  "nodes/skills"
+                ]
+              },
+              {
+                "group": "Conversation",
+                "pages": [
+                  "nodes/preset-message",
+                  "nodes/end-conversation"
+                ]
+              },
+              {
+                "group": "Functions",
+                "pages": [
+                  "nodes/assign-to-human",
+                  "nodes/business-hour",
+                  "nodes/create-task",
+                  "nodes/http-request"
+                ]
+              },
+              {
+                "group": "Call Functions",
+                "pages": [
+                  "nodes/initiate-call",
+                  "nodes/ivr-menu",
+                  "nodes/collect-response",
+                  "nodes/call-forward",
+                  "nodes/record-voicemail",
+                  "nodes/play-audio",
+                  "nodes/conference",
+                  "nodes/multi-party-call",
+                  "nodes/stream"
+                ]
+              },
+              {
+                "group": "Customer Input",
+                "pages": [
+                  "nodes/customer-feedback",
+                  "nodes/collect-data"
+                ]
+              },
+              {
+                "group": "Logic",
+                "pages": [
+                  "nodes/rule-branching",
+                  "nodes/counter"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Voice AI",
+            "pages": [
+              "voice-ai/overview",
+              "voice-ai/text-to-speech",
+              "voice-ai/voice-selection",
+              "voice-ai/pronunciation-guide",
+              "voice-ai/speech-to-text",
+              "voice-ai/background-audio",
+              "voice-ai/interruption-handling",
+              "voice-ai/turn-detection",
+              "voice-ai/latency-optimization"
+            ]
+          },
+          {
+            "group": "LLM Configuration",
+            "pages": [
+              "llm/overview",
+              "llm/supported-models",
+              "llm/prompt-engineering",
+              "llm/parameters",
+              "llm/custom-llms",
+              "llm/function-calling"
+            ]
+          },
+          {
+            "group": "Knowledge Base",
+            "pages": [
+              "knowledge-base/overview",
+              "knowledge-base/create-knowledge-base",
+              "knowledge-base/upload-documents",
+              "knowledge-base/linking-to-agents"
+            ]
+          },
+          {
+            "group": "Channels & Triggers",
+            "pages": [
+              "channels/inbound-calls",
+              "channels/api-request",
+              "channels/sms",
+              "channels/whatsapp",
+              "channels/chat"
+            ]
+          },
+          {
+            "group": "Conversation Management",
+            "pages": [
+              "conversations/conversation-lifecycle",
+              "conversations/conversation-goals",
+              "conversations/call-recording",
+              "conversations/transcription"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/overview",
+              "integrations/webhooks",
+              "integrations/crm-integration",
+              "integrations/zapier",
+              "integrations/slack-integration",
+              "integrations/custom-integrations"
+            ]
+          },
+          {
+            "group": "Event Callbacks",
+            "pages": [
+              "callbacks/overview",
+              "callbacks/hangup",
+              "callbacks/recording",
+              "callbacks/error-events"
+            ]
+          },
+          {
+            "group": "Analytics & Monitoring",
+            "pages": [
+              "analytics/customer-metrics",
+              "analytics/conversations-overview",
+              "analytics/agent-performance",
+              "analytics/voice-agent",
+              "analytics/agent-availability",
+              "analytics/operations-overview"
+            ]
+          },
+          {
+            "group": "Testing & Debugging",
+            "pages": [
+              "testing/test-your-agent",
+              "testing/agent-runs",
+              "testing/debug-mode",
+              "testing/simulated-conversations",
+              "testing/common-issues"
+            ]
+          },
+          {
+            "group": "Deployment",
+            "pages": [
+              "deployment/go-live-checklist",
+              "deployment/phone-numbers",
+              "deployment/production-best-practices"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": [
+              "api-reference/introduction",
+              "api-reference/authentication",
+              "api-reference/errors",
+              "api-reference/rate-limits"
+            ]
+          },
+          {
+            "group": "Agents",
+            "pages": [
+              "api-reference/agents/create-agent",
+              "api-reference/agents/list-agents",
+              "api-reference/agents/get-agent",
+              "api-reference/agents/update-agent",
+              "api-reference/agents/delete-agent"
+            ]
+          },
+          {
+            "group": "Flows",
+            "pages": [
+              "api-reference/flows/create-flow",
+              "api-reference/flows/list-flows",
+              "api-reference/flows/get-flow",
+              "api-reference/flows/update-flow",
+              "api-reference/flows/delete-flow",
+              "api-reference/flows/trigger-flow"
+            ]
+          },
+          {
+            "group": "Conversations",
+            "pages": [
+              "api-reference/conversations/list-conversations",
+              "api-reference/conversations/get-conversation",
+              "api-reference/conversations/conversation-history"
+            ]
+          },
+          {
+            "group": "Knowledge Base",
+            "pages": [
+              "api-reference/knowledge-base/create-kb",
+              "api-reference/knowledge-base/upload-source",
+              "api-reference/knowledge-base/list-sources",
+              "api-reference/knowledge-base/delete-source"
+            ]
+          },
+          {
+            "group": "Phone Numbers",
+            "pages": [
+              "api-reference/phone-numbers/list-numbers",
+              "api-reference/phone-numbers/assign-number",
+              "api-reference/phone-numbers/release-number"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/webhooks/create-webhook",
+              "api-reference/webhooks/list-webhooks"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "SDKs",
+        "groups": [
+          {
+            "group": "SDKs",
+            "pages": [
+              "sdks/overview",
+              "sdks/python",
+              "sdks/node",
+              "sdks/ruby",
+              "sdks/java",
+              "sdks/go",
+              "sdks/php",
+              "sdks/dotnet"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Changelog",
+        "groups": [
+          {
+            "group": "Changelog",
+            "pages": [
+              "changelog/overview"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": []
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "https://support.plivo.com"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Console",
+      "href": "https://console.plivo.com"
+    }
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/plivo",
+      "github": "https://github.com/plivo",
+      "linkedin": "https://linkedin.com/company/plivo"
+    }
+  }
+}
