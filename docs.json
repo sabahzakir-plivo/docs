@@ -4,9 +4,9 @@
   "name": "Plivo AI Agents",
   "description": "Build, deploy, and manage AI voice and messaging agents on Plivo.",
   "colors": {
-    "primary": "#00B96B",
-    "light": "#55D799",
-    "dark": "#00854D"
+    "primary": "#117866",
+    "light": "#4ade80",
+    "dark": "#166534"
   },
   "favicon": "/favicon.svg",
   "logo": {
@@ -14,8 +14,8 @@
     "dark": "/logo/dark.svg"
   },
   "fonts": {
-    "heading": { "family": "Inter", "weight": 700 },
-    "body": { "family": "Inter", "weight": 400 }
+    "heading": { "family": "Sora", "weight": 700 },
+    "body": { "family": "Sora", "weight": 400 }
   },
   "navigation": {
     "tabs": [
