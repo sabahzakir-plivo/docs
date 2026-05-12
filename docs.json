@@ -14,8 +14,8 @@
     "dark": "/logo/dark.svg"
   },
   "fonts": {
-    "heading": { "family": "Sora", "weight": 700 },
-    "body": { "family": "Sora", "weight": 400 }
+    "heading": { "family": "Inter", "weight": 700 },
+    "body": { "family": "Inter", "weight": 400 }
   },
   "navigation": {
     "tabs": [
