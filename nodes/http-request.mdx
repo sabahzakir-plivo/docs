@@ -1,4 +1,235 @@
 ---
 title: "HTTP Request"
-description: "Sends an API request to an external system and processes the response."
+description: "Call an external API from inside your agent flow and use the response in later nodes."
 ---
+
+The **HTTP Request** node calls any HTTP/HTTPS endpoint from inside a flow. Use it to look up data in your CRM, push events to a webhook, validate user input against a backend service, or fetch live information (order status, balance, eligibility) so the agent can speak it back to the caller.
+
+The node sends the request, captures the response, and stores it so downstream nodes — AI Conversation, Preset Message, Rule Branching — can read fields from it.
+
+## When to use it
+
+<CardGroup cols={2}>
+  <Card title="Lookup data" icon="magnifying-glass">
+    Fetch a customer record, order, or appointment from your backend so the agent can personalize the conversation.
+  </Card>
+  <Card title="Send data out" icon="paper-plane">
+    POST conversation results, lead details, or feedback to a webhook, CRM, or ticketing system.
+  </Card>
+  <Card title="Validate input" icon="circle-check">
+    Verify a user-provided value (email, account ID, OTP) against an external service before continuing.
+  </Card>
+  <Card title="Trigger workflows" icon="bolt">
+    Kick off a downstream process — refund, escalation, SMS dispatch — in another system.
+  </Card>
+</CardGroup>
+
+## Configuration
+
+The sidebar opens with a **Name** field, an **API URL** row that combines the method selector with the URL input, and four tabs — **Auth**, **Params**, **Header**, **Body**. Below the tabs are **Test API Response**, **Timeout**, and **Retry** controls.
+
+### Name
+
+A label for the node. Shown on the canvas and used to reference the node's output downstream.
+
+### Method and URL
+
+<ParamField path="Method" type="enum" required default="GET">
+  One of `GET`, `POST`, `PATCH`, `PUT`, `DELETE`.
+</ParamField>
+
+<ParamField path="URL" type="string" required>
+  Full endpoint URL. Supports flow variables — pick from the variable picker on the right of the input or type `{{variable_name}}` directly. Example: `https://api.example.com/customers/{{caller_phone}}`.
+</ParamField>
+
+<Tip>
+  Already have the request as a cURL command? Click **Import cURL** above the tabs and paste it in. The dialog parses the URL, method, headers, params, body, and auth (`-u username:password`, `Authorization: Basic …`, `Authorization: Bearer …`, `Authorization: Token …`) and pre-fills every field.
+</Tip>
+
+### Auth tab
+
+<ParamField path="Auth Type" type="enum" default="No Auth">
+  - **No Auth** — no credentials added to the request
+  - **Basic Auth** — sends `Authorization: Basic <base64(username:password)>`
+  - **Bearer Token** — sends `Authorization: Bearer <token>`
+</ParamField>
+
+For **Basic Auth**, provide `Username` and `Password`. For **Bearer Token**, provide `Token`.
+
+<Note>
+  Sensitive fields (Password, Token) accept **Secret Variables** in the form `{{Secrets.SECRET_NAME}}`. Use the lock icon inside the field to pick from your configured secrets. Secrets are resolved at request time and are never stored on the node itself.
+</Note>
+
+### Params tab
+
+Add query parameters as a key-value list. They are appended to the URL as `?key=value&…`. Values support flow variables and `{{Secrets.SECRET_NAME}}`.
+
+### Header tab
+
+Add request headers as a key-value list. Common entries: `Content-Type`, `Accept`, custom `X-…` headers. Values support flow variables and secrets.
+
+<Note>
+  When you select a body type other than **None**, the appropriate `Content-Type` is applied automatically — you do not need to set it manually unless you want to override the default.
+</Note>
+
+### Body tab
+
+<ParamField path="Body Type" type="enum" default="None">
+  - **None** — no body sent
+  - **Form Data** — sent as `multipart/form-data`
+  - **JSON** — sent as `application/json`
+  - **Form URL Encoded** — sent as `application/x-www-form-urlencoded`
+</ParamField>
+
+For **Form Data** and **Form URL Encoded**, build the body as key-value pairs. For **JSON**, use the code editor — autocomplete suggests flow variables and secrets as you type. All body fields support `{{variable_name}}` and `{{Secrets.SECRET_NAME}}`.
+
+### Test API Response
+
+Once you configure URL, auth, params, headers, or body, click **Test Response** to fire a live request. The result is shown in the response panel along with the detected content type (for example `application/json`). Re-running it shows as **Retest**.
+
+<Warning>
+  Testing the response is **required** before saving. If you change any of URL, auth, params, headers, or body, the node re-tests automatically on save and blocks the save if the API call fails. The validation error reads: *"Please test the API response before saving."*
+</Warning>
+
+The tested response structure is what downstream nodes see when they reference fields from this node, so test against a representative payload.
+
+### Timeout and Retry
+
+<ParamField path="Time out requests after" type="number (ms)" default="1000">
+  Maximum time to wait for a response, in milliseconds. Range: `0`–`30000` (30 seconds).
+</ParamField>
+
+<ParamField path="Retry the request" type="number" default="0">
+  Number of times to retry on failure. Range: `0`–`3`.
+</ParamField>
+
+## Output branches
+
+The node has two outgoing branches:
+
+<AccordionGroup>
+  <Accordion title="Success" icon="check">
+    Taken when the request completes with a successful status code within the timeout (after any configured retries).
+  </Accordion>
+  <Accordion title="Failed" icon="xmark">
+    Taken when the request fails — timeout exceeded, network error, or a non-success status code that exhausts all retries. The captured `response` and `status_code` are still available on the failure path so you can branch on what went wrong.
+  </Accordion>
+</AccordionGroup>
+
+## Using the response downstream
+
+The flow execution exposes the response as:
+
+| Field | Description |
+|---|---|
+| `response` | The response body. For JSON responses, the parsed object — drill in with dot notation. For other content types, the raw string. |
+| `status_code` | HTTP status code returned by the server. |
+
+Reference values from later nodes using the node's name. For example, if the node is named `Lookup Customer` and the response is `{"first_name": "Alex", "tier": "gold"}`:
+
+```text
+Hi {{Lookup Customer.response.first_name}}, I see you're on our {{Lookup Customer.response.tier}} plan.
+```
+
+<Tip>
+  The shape of `response` mirrors what came back from **Test Response**. Test against realistic data so the variable picker shows the right fields.
+</Tip>
+
+## Example: lookup a customer in your CRM
+
+<Steps>
+  <Step title="Add the node">
+    Drag an **HTTP Request** node onto the canvas after the node that captures the caller's phone number or account ID. Name it `Lookup Customer`.
+  </Step>
+  <Step title="Configure the request">
+    - **Method:** `GET`
+    - **URL:** `https://api.acme.com/v1/customers?phone={{caller_id}}`
+    - **Auth tab:** Bearer Token → `{{Secrets.ACME_API_TOKEN}}`
+    - **Header tab:** `Accept: application/json`
+  </Step>
+  <Step title="Test the response">
+    Click **Test Response**. Once you see the parsed JSON, save the node.
+  </Step>
+  <Step title="Use the response in the next node">
+    In an **AI Conversation** or **Preset Message** node:
+
+    ```text
+    Hi {{Lookup Customer.response.first_name}}, I can see your last order
+    was placed on {{Lookup Customer.response.last_order_date}}.
+    ```
+  </Step>
+  <Step title="Wire up the Failed branch">
+    Connect **Failed** to a **Preset Message** like *"I'm having trouble looking up your account — let me connect you to an agent,"* then route to **Assign to Human**.
+  </Step>
+</Steps>
+
+## Example: POST conversation results to a webhook
+
+<Steps>
+  <Step title="Place the node before End Conversation">
+    Add the HTTP Request node at the end of the flow, just before **End Conversation**.
+  </Step>
+  <Step title="Configure the POST">
+    - **Method:** `POST`
+    - **URL:** `https://hooks.your-domain.com/agent-events`
+    - **Header tab:** `Content-Type: application/json` (auto-set when Body Type is JSON)
+    - **Body tab:** Body Type = **JSON**
+
+      ```json
+      {
+        "session_id": "{{session_id}}",
+        "caller": "{{caller_id}}",
+        "outcome": "{{call_outcome}}",
+        "transcript_url": "{{transcript_url}}"
+      }
+      ```
+  </Step>
+  <Step title="Test and save">
+    Click **Test Response** to confirm your webhook accepts the payload. Save.
+  </Step>
+</Steps>
+
+## Best practices
+
+<CardGroup cols={2}>
+  <Card title="Keep timeouts tight" icon="stopwatch">
+    Long timeouts mean silent dead air for callers. Stay well under the 30 s cap — 2–5 s is a good range for most APIs. Always wire up the **Failed** branch.
+  </Card>
+  <Card title="Use Secrets for credentials" icon="lock">
+    Never paste API tokens or passwords directly into the field. Store them as Secrets and reference them as `{{Secrets.NAME}}` so they aren't exposed in flow exports or logs.
+  </Card>
+  <Card title="Test with realistic data" icon="flask">
+    The tested response shapes what's available to downstream nodes. Test against a realistic payload so the variable picker shows every field you'll need.
+  </Card>
+  <Card title="Be careful with retries" icon="rotate">
+    Retries multiply latency. For non-idempotent calls (`POST` that creates records, charges a card, sends a message), set **Retry** to `0` to avoid duplicates.
+  </Card>
+</CardGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title='Save is blocked with "Please test the API response before saving"'>
+    You configured a URL, auth, params, headers, or body field but haven't run **Test Response** since. Click **Test Response** (or **Retest** if you've tested before) and save again.
+  </Accordion>
+  <Accordion title="Flow always takes the Failed branch at runtime">
+    Inspect `status_code` and `response` on the failure path. A `4xx` usually means an auth or URL issue; a `5xx` means the backend errored; an empty `status_code` typically means a timeout. Increase **Time out** within the 30 s cap if the API is genuinely slow.
+  </Accordion>
+  <Accordion title="Variables aren't resolving — request contains literal {{variable_name}}">
+    Confirm the variable name matches exactly (case-sensitive) and that the node producing the variable runs before this node. Re-run **Test Response** to see the final request body the server actually receives.
+  </Accordion>
+  <Accordion title="Downstream node can't find a field in the response">
+    The available fields come from the **Tested** response. If your real API returns a different shape than your test response, re-run the test against representative data and save.
+  </Accordion>
+  <Accordion title="cURL import didn't pick up authentication">
+    The importer recognizes `-u user:pass` and the `Authorization` header (`Basic`, `Bearer`, `Token`). Other auth shapes (`X-Api-Key`, custom schemes) come in as regular headers — switch to the relevant Auth Type manually if needed.
+  </Accordion>
+</AccordionGroup>
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Variables and Payloads" href="/flows/variables-and-payloads" icon="brackets-curly" />
+  <Card title="Rule Branching" href="/nodes/rule-branching" icon="code-branch" />
+  <Card title="AI Conversation" href="/nodes/ai-conversation" icon="comments" />
+</CardGroup>
